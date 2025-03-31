@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Boykot mu?</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .correct {
+      background-color: lightgreen !important;
+    }
+
+    .wrong {
+      background-color: lightcoral !important;
+    }
+
+    img {
+      width: 300px;
+      height: auto;
+      margin: 20px 0 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #brand-name {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    #intro img {
+      width: 350px;
+      max-width: 90%;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- INTRO SECTION -->
+  <div id="intro">
+    <h2>Bu marka boykot mu?</h2>
+    <p>Hangi markaları almaktan kaçınmamız gerektiğini ve hangi markaları rahatlıkla alabileceğimizi öğrenmeye hazır mısın?</p>
+    <br>
+    <button class="button" onclick="startQuiz()">Hazırım</button>
+    <button class="button" onclick="window.location.href='https://akuyelikistanbul.org/pages/login'">Değilim</button>
+  </div>
+
+  <!-- QUIZ SECTION -->
+  <div id="quiz" class="hidden">
+    <h2 id="question">Bu marka boykot mu?</h2>
+    <img id="product-image" src="" alt="Product Image">
+    <div id="brand-name"></div>
+    <div>
+      <button class="button" id="boykot-btn">Boykot</button>
+      <button class="button" id="not-btn">Değil</button>
+    </div>
+  </div>
+
+  <!-- SCORE SECTION -->
+  <div id="score-section" class="hidden">
+    <h2>Tebrikler!</h2>
+    <p id="score-text"></p>
+    <button class="button" onclick="location.reload()">Tekrar Oyna</button>
+  </div>
+
+  <script>
+    const questions = [
+      { name: "Espressolab", image: "https://upload.wikimedia.org/wikipedia/commons/a/ae/Espressolab.jpg", shouldBoycott: true },
+      { name: "Starbucks", image: "https://upload.wikimedia.org/wikipedia/en/d/d3/Starbucks_Corporation_Logo_2011.svg", shouldBoycott: true },
+      { name: "Colombia Coffee", image: "https://www.colombiacoffeetr.com.tr/images/settings/actual/colombia-yatay.png", shouldBoycott: false },
+      { name: "Mado", image: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Mado_logo.jpg", shouldBoycott: true },
+      { name: "Simit Sarayı", image: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Simit_Sarayı_logo.png", shouldBoycott: true },
+      { name: "Watsons", image: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Watsons_logotype.svg", shouldBoycott: true },
+      { name: "Gratis", image: "https://upload.wikimedia.org/wikipedia/commons/5/55/Gratis-logo-big.svg", shouldBoycott: false },
+      { name: "Ülker", image: "https://upload.wikimedia.org/wikipedia/commons/3/38/%C3%9Clker_logo.svg", shouldBoycott: true },
+      { name: "Eti", image: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Eti_logo.png", shouldBoycott: false },
+      { name: "Exxen", image: "https://upload.wikimedia.org/wikipedia/commons/d/db/Exxen.png", shouldBoycott: true },
+      { name: "Puhu TV", image: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Puhutv.jpg", shouldBoycott: true },
+      { name: "Gain", image: "https://upload.wikimedia.org/wikipedia/tr/2/21/Gain_Medya_logosu.png", shouldBoycott: false },
+      { name: "Çaykur", image: "https://upload.wikimedia.org/wikipedia/tr/2/28/Çaykur_logo.png", shouldBoycott: true },
+      { name: "Lipton", image: "https://upload.wikimedia.org/wikipedia/tr/5/55/Lipton.logo.png", shouldBoycott: false },
+      { name: "D&R", image: "https://upload.wikimedia.org/wikipedia/tr/5/52/D%26R_logo.jpg", shouldBoycott: true },
+      { name: "Dost Kitabevi", image: "https://www.yaybir.org.tr/wp-content/uploads/2020/12/dost.jpg", shouldBoycott: false },
+      { name: "BKM Kitap", image: "https://i3.kuponla.com/wp-content/uploads/2021/09/bkmkitap-guncel-indirim-kuponlari-KUPONLACOM.svg", shouldBoycott: false },
+      { name: "Kitapyurdu", image: "https://cdn.picodi.com/tr/shop/thumb_200/kitapyurdu-com_1469_001_2.png", shouldBoycott: false },
+      { name: "Kızılay", image: "https://upload.wikimedia.org/wikipedia/commons/4/48/Türk_Kızılay_logo.svg", shouldBoycott: true },
+      { name: "Beypazarı", image: "https://upload.wikimedia.org/wikipedia/tr/e/ee/Beypazarı_maden_suyu_logo.png", shouldBoycott: false },
+      { name: "ATV", image: "https://upload.wikimedia.org/wikipedia/commons/4/45/Atv_logo_2010.svg", shouldBoycott: true },
+      { name: "A Haber", image: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Ahaber_Logo.png", shouldBoycott: true },
+      { name: "NOW TV", image: "https://upload.wikimedia.org/wikipedia/commons/d/db/NOW_TV_%28Turkey%29_wordmark-red.svg", shouldBoycott: false },
+      { name: "Trendyol", image: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Trendyol_logo.svg", shouldBoycott: true },
+      { name: "Getir", image: "https://upload.wikimedia.org/wikipedia/commons/3/38/Getir_wordmark.svg", shouldBoycott: false },
+      { name: "Yemeksepeti", image: "https://upload.wikimedia.org/wikipedia/commons/d/de/Yemeksepeti_logo.svg", shouldBoycott: false },
+      { name: "Efes", image: "https://upload.wikimedia.org/wikipedia/de/1/15/Efes_pilsen.svg", shouldBoycott: true },
+      { name: "Carlsberg", image: "https://static.wikia.nocookie.net/bier/images/2/2c/Carlsberg_Brauerei_Logo.png/revision/latest/scale-to-width-down/268?cb=20171017213838&path-prefix=de", shouldBoycott: false },
+      { name: "Türk Tuborg", image: "https://upload.wikimedia.org/wikipedia/tr/c/c5/Türk_Tuborg_logo.png", shouldBoycott: false }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const image = document.getElementById("product-image");
+    const brandName = document.getElementById("brand-name");
+    const boykotBtn = document.getElementById("boykot-btn");
+    const notBtn = document.getElementById("not-btn");
+
+    function startQuiz() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("quiz").classList.remove("hidden");
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const question = questions[current];
+      image.src = question.image;
+      brandName.textContent = question.name;
+
+      [boykotBtn, notBtn].forEach(btn => {
+        btn.classList.remove("correct", "wrong");
+        btn.disabled = false;
+      });
+    }
+
+    function handleAnswer(answer) {
+      const correctAnswer = questions[current].shouldBoycott;
+      if (answer === correctAnswer) score++;
+
+      boykotBtn.disabled = true;
+      notBtn.disabled = true;
+
+      if (correctAnswer) {
+        boykotBtn.classList.add("correct");
+        notBtn.classList.add("wrong");
+      } else {
+        notBtn.classList.add("correct");
+        boykotBtn.classList.add("wrong");
+      }
+
+      if (correctAnswer !== answer) {
+        (answer ? boykotBtn : notBtn).classList.add("wrong");
+      }
+
+      setTimeout(() => {
+        current++;
+        if (current < questions.length) {
+          loadQuestion();
+        } else {
+          showScore();
+        }
+      }, 1000);
+    }
+
+    function showScore() {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("score-section").classList.remove("hidden");
+      document.getElementById("score-text").textContent =
+        `Doğru sayısı: ${score} / ${questions.length}`;
+    }
+
+    boykotBtn.onclick = () => handleAnswer(true);
+    notBtn.onclick = () => handleAnswer(false);
+  </script>
+
+</body>
+</html>
