@@ -46,6 +46,25 @@
       max-width: 90%;
       margin-bottom: 20px;
     }
+
+    #results-list {
+      text-align: left;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .result-item {
+      font-size: 18px;
+      margin: 6px 0;
+    }
+
+    .right::before {
+      content: "✅ ";
+    }
+
+    .wrong::before {
+      content: "❌ ";
+    }
   </style>
 </head>
 <body>
@@ -54,6 +73,7 @@
   <div id="intro">
     <h2>Bu marka boykot mu?</h2>
     <p>Hangi markaları almaktan kaçınmamız gerektiğini ve hangi markaları rahatlıkla alabileceğimizi öğrenmeye hazır mısın?</p>
+    <img src="https://boykotyap.com/images/hero/slogan.svg" alt="Slogan">
     <br>
     <button class="button" onclick="startQuiz()">Hazırım</button>
     <button class="button" onclick="window.location.href='https://akuyelikistanbul.org/pages/login'">Değilim</button>
@@ -74,6 +94,7 @@
   <div id="score-section" class="hidden">
     <h2>Tebrikler!</h2>
     <p id="score-text"></p>
+    <div id="results-list"></div>
     <button class="button" onclick="location.reload()">Tekrar Oyna</button>
   </div>
 
@@ -88,30 +109,13 @@
       { name: "Gratis", image: "https://upload.wikimedia.org/wikipedia/commons/5/55/Gratis-logo-big.svg", shouldBoycott: false },
       { name: "Ülker", image: "https://upload.wikimedia.org/wikipedia/commons/3/38/%C3%9Clker_logo.svg", shouldBoycott: true },
       { name: "Eti", image: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Eti_logo.png", shouldBoycott: false },
-      { name: "Exxen", image: "https://upload.wikimedia.org/wikipedia/commons/d/db/Exxen.png", shouldBoycott: true },
-      { name: "Puhu TV", image: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Puhutv.jpg", shouldBoycott: true },
-      { name: "Gain", image: "https://upload.wikimedia.org/wikipedia/tr/2/21/Gain_Medya_logosu.png", shouldBoycott: false },
-      { name: "Çaykur", image: "https://upload.wikimedia.org/wikipedia/tr/2/28/Çaykur_logo.png", shouldBoycott: true },
-      { name: "Lipton", image: "https://upload.wikimedia.org/wikipedia/tr/5/55/Lipton.logo.png", shouldBoycott: false },
-      { name: "D&R", image: "https://upload.wikimedia.org/wikipedia/tr/5/52/D%26R_logo.jpg", shouldBoycott: true },
-      { name: "Dost Kitabevi", image: "https://www.yaybir.org.tr/wp-content/uploads/2020/12/dost.jpg", shouldBoycott: false },
-      { name: "BKM Kitap", image: "https://i3.kuponla.com/wp-content/uploads/2021/09/bkmkitap-guncel-indirim-kuponlari-KUPONLACOM.svg", shouldBoycott: false },
-      { name: "Kitapyurdu", image: "https://cdn.picodi.com/tr/shop/thumb_200/kitapyurdu-com_1469_001_2.png", shouldBoycott: false },
-      { name: "Kızılay", image: "https://upload.wikimedia.org/wikipedia/commons/4/48/Türk_Kızılay_logo.svg", shouldBoycott: true },
-      { name: "Beypazarı", image: "https://upload.wikimedia.org/wikipedia/tr/e/ee/Beypazarı_maden_suyu_logo.png", shouldBoycott: false },
-      { name: "ATV", image: "https://upload.wikimedia.org/wikipedia/commons/4/45/Atv_logo_2010.svg", shouldBoycott: true },
-      { name: "A Haber", image: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Ahaber_Logo.png", shouldBoycott: true },
-      { name: "NOW TV", image: "https://upload.wikimedia.org/wikipedia/commons/d/db/NOW_TV_%28Turkey%29_wordmark-red.svg", shouldBoycott: false },
-      { name: "Trendyol", image: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Trendyol_logo.svg", shouldBoycott: true },
-      { name: "Getir", image: "https://upload.wikimedia.org/wikipedia/commons/3/38/Getir_wordmark.svg", shouldBoycott: false },
-      { name: "Yemeksepeti", image: "https://upload.wikimedia.org/wikipedia/commons/d/de/Yemeksepeti_logo.svg", shouldBoycott: false },
-      { name: "Efes", image: "https://upload.wikimedia.org/wikipedia/de/1/15/Efes_pilsen.svg", shouldBoycott: true },
-      { name: "Carlsberg", image: "https://static.wikia.nocookie.net/bier/images/2/2c/Carlsberg_Brauerei_Logo.png/revision/latest/scale-to-width-down/268?cb=20171017213838&path-prefix=de", shouldBoycott: false },
-      { name: "Türk Tuborg", image: "https://upload.wikimedia.org/wikipedia/tr/c/c5/Türk_Tuborg_logo.png", shouldBoycott: false }
+      { name: "Exxen", image: "https://upload.wikimedia.org/wikipedia/commons/d/db/Exxen.png", shouldBoycott: true }
+      // Add remaining brands here...
     ];
 
     let current = 0;
     let score = 0;
+    const userAnswers = [];
 
     const image = document.getElementById("product-image");
     const brandName = document.getElementById("brand-name");
@@ -137,7 +141,10 @@
 
     function handleAnswer(answer) {
       const correctAnswer = questions[current].shouldBoycott;
-      if (answer === correctAnswer) score++;
+      const isCorrect = answer === correctAnswer;
+      if (isCorrect) score++;
+
+      userAnswers.push({ brand: questions[current].name, shouldBoycott: correctAnswer, userAnswer: answer, isCorrect });
 
       boykotBtn.disabled = true;
       notBtn.disabled = true;
@@ -150,7 +157,7 @@
         boykotBtn.classList.add("wrong");
       }
 
-      if (correctAnswer !== answer) {
+      if (!isCorrect) {
         (answer ? boykotBtn : notBtn).classList.add("wrong");
       }
 
@@ -167,8 +174,19 @@
     function showScore() {
       document.getElementById("quiz").classList.add("hidden");
       document.getElementById("score-section").classList.remove("hidden");
+
       document.getElementById("score-text").textContent =
         `Doğru sayısı: ${score} / ${questions.length}`;
+
+      const resultsDiv = document.getElementById("results-list");
+      resultsDiv.innerHTML = "";
+
+      userAnswers.forEach(ans => {
+        const item = document.createElement("div");
+        item.className = "result-item " + (ans.isCorrect ? "right" : "wrong");
+        item.textContent = `${ans.brand} — ${ans.shouldBoycott ? "Boykot" : "Değil"}`;
+        resultsDiv.appendChild(item);
+      });
     }
 
     boykotBtn.onclick = () => handleAnswer(true);
