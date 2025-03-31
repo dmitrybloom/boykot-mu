@@ -4,12 +4,27 @@
   <meta charset="UTF-8" />
   <title>Boykot mu?</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: sans-serif;
-      text-align: center;
       margin: 0;
-      padding: 40px 20px;
-      background-color: #f9f9f9;
+      padding: 0;
+      background-color: #6a6a6a;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 90%;
+      padding: 20px;
     }
 
     h2 {
@@ -27,20 +42,26 @@
       margin: 10px;
       font-size: 18px;
       cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background-color: red;
+      color: white;
     }
 
     .correct {
-      background-color: lightgreen !important;
+      background-color: green !important;
     }
 
     .wrong {
-      background-color: lightcoral !important;
+      background-color: red !important;
     }
 
     img {
       width: 300px;
+      max-width: 100%;
       height: auto;
       margin: 20px 0 10px;
+      border-radius: 8px;
     }
 
     .hidden {
@@ -55,19 +76,17 @@
 
     #intro img {
       width: 350px;
-      max-width: 90%;
+      max-width: 100%;
       margin-bottom: 20px;
     }
 
     #final-results {
-      max-width: 600px;
-      margin: 0 auto;
       text-align: left;
       font-size: 18px;
-      background: #fff;
+      background: #111;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(255,0,0,0.2);
     }
 
     #final-results ul {
@@ -77,41 +96,46 @@
 
     #final-results li {
       margin: 8px 0;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
     }
   </style>
 </head>
 <body>
 
-  <!-- INTRO SECTION -->
-  <div id="intro">
-    <h2>Bu marka boykot mu?</h2>
-    <p>Hangi markaları almaktan kaçınmamız gerektiğini ve hangi markaları rahatlıkla alabileceğimizi öğrenmeye hazır mısın?</p>
-    <img src="https://boykotyap.com/images/hero/slogan.svg" alt="Slogan">
-    <br>
-    <button class="button" onclick="startQuiz()">Hazırım</button>
-    <button class="button" onclick="window.location.href='https://akuyelikistanbul.org/pages/login'">Değilim</button>
-  </div>
-
-  <!-- QUIZ SECTION -->
-  <div id="quiz" class="hidden">
-    <h2 id="question">Bu marka boykot mu?</h2>
-    <img id="product-image" src="" alt="Product Image">
-    <div id="brand-name"></div>
-    <div>
-      <button class="button" id="boykot-btn">Boykot</button>
-      <button class="button" id="not-btn">Değil</button>
+  <div class="container">
+    <!-- INTRO SECTION -->
+    <div id="intro">
+      <h2>Bu marka boykot mu?</h2>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3TJsINaijRveSYz4xY0oR9qQSDHfZAO2Fmg&s" alt="Slogan">
+      <p>Hangi markaları almaktan kaçınmamız gerektiğini ve hangi markaları rahatlıkla alabileceğimizi öğrenmeye hazır mısın?</p>
+      
+      <br>
+      <button class="button" onclick="startQuiz()">Hazırım</button>
+      <button class="button" onclick="window.location.href='https://akuyelikistanbul.org/pages/login'">Değilim</button>
     </div>
-  </div>
 
-  <!-- SCORE SECTION -->
-  <div id="score-section" class="hidden">
-    <h2>Tebrikler!</h2>
-    <p id="score-text"></p>
-    <div id="final-results">
-      <h3>Tüm Markalar</h3>
-      <ul id="brand-list"></ul>
+    <!-- QUIZ SECTION -->
+    <div id="quiz" class="hidden">
+      <h2 id="question">Bu marka boykot mu?</h2>
+      <img id="product-image" src="" alt="Product Image">
+      <div id="brand-name"></div>
+      <div>
+        <button class="button" id="boykot-btn">Boykot</button>
+        <button class="button" id="not-btn">Değil</button>
+      </div>
     </div>
-    <button class="button" onclick="location.reload()">Tekrar Oyna</button>
+
+    <!-- SCORE SECTION -->
+    <div id="score-section" class="hidden">
+      <h2>Tebrikler!</h2>
+      <p id="score-text"></p>
+      <div id="final-results">
+        <h3>Tüm Markalar</h3>
+        <ul id="brand-list"></ul>
+      </div>
+      <button class="button" onclick="location.reload()">Tekrar Oyna</button>
+    </div>
   </div>
 
   <script>
@@ -140,11 +164,13 @@
       { name: "A Haber", image: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Ahaber_Logo.png", shouldBoycott: true },
       { name: "NOW TV", image: "https://upload.wikimedia.org/wikipedia/commons/d/db/NOW_TV_%28Turkey%29_wordmark-red.svg", shouldBoycott: false },
       { name: "Trendyol", image: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Trendyol_logo.svg", shouldBoycott: true },
-      { name: "Getir", image: "https://upload.wikimedia.org/wikipedia/commons/3/38/Getir_wordmark.svg", shouldBoycott: false },
+      { name: "Getir", image: "https://upload.wikimedia.org/wikipedia/commons/3/38/Getir_wordmark.svg", shouldBoycott: true },
       { name: "Yemeksepeti", image: "https://upload.wikimedia.org/wikipedia/commons/d/de/Yemeksepeti_logo.svg", shouldBoycott: false },
       { name: "Efes", image: "https://upload.wikimedia.org/wikipedia/de/1/15/Efes_pilsen.svg", shouldBoycott: true },
-      { name: "Carlsberg", image: "https://static.wikia.nocookie.net/bier/images/2/2c/Carlsberg_Brauerei_Logo.png", shouldBoycott: false },
-      { name: "Türk Tuborg", image: "https://upload.wikimedia.org/wikipedia/tr/c/c5/Türk_Tuborg_logo.png", shouldBoycott: false }
+      { name: "Carlsberg", image: "https://1000logos.net/wp-content/uploads/2016/10/Carlsberg-logo.png", shouldBoycott: false },
+      { name: "Türk Tuborg", image: "https://upload.wikimedia.org/wikipedia/tr/c/c5/Türk_Tuborg_logo.png", shouldBoycott: false },
+      { name: "Sleepy", image: "https://www.sleepy.com.tr/images/uploads/footer-logo.png", shouldBoycott: true },
+      { name: "Martı", image: "https://cdnuploads.aa.com.tr/uploads/sirkethaberleri/Contents/2023/09/12/thumbs_b_c_886d618df3d99bb2a0c4fca82082c446.jpg", shouldBoycott: true },
     ];
 
     let current = 0;
